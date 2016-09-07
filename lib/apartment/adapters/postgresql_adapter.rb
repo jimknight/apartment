@@ -134,6 +134,8 @@ module Apartment
         Rails.logger.debug "default_tenant = #{default_tenant}"
         Rails.logger.debug "dbname = #{dbname}"
         with_pg_env { `pg_dump -s -x -O -n #{default_tenant} #{dbname}` }
+      rescue => e
+        Rails.logger.fatal e.message
       end
 
       #   Dump data from schema_migrations table
