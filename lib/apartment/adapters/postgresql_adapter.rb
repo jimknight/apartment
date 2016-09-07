@@ -15,7 +15,7 @@ module Apartment
     # Default adapter when not using Postgresql Schemas
     class PostgresqlAdapter < AbstractAdapter
 
-    private
+      private
 
       def rescue_from
         PGError
@@ -44,7 +44,7 @@ module Apartment
         @current || default_tenant
       end
 
-    protected
+      protected
 
       def process_excluded_model(excluded_model)
         excluded_model.constantize.tap do |klass|
@@ -72,7 +72,7 @@ module Apartment
         raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
       end
 
-    private
+      private
 
       def create_tenant_command(conn, tenant)
         conn.execute(%{CREATE SCHEMA "#{tenant}"})
@@ -102,7 +102,7 @@ module Apartment
         copy_schema_migrations
       end
 
-    private
+      private
 
       # Clone default schema into new schema named after current tenant
       #
@@ -163,13 +163,15 @@ module Apartment
       #   @return {String} patched raw SQL dump
       #
       def patch_search_path(sql)
+        logger.debug "sql = #{sql}"
         search_path = "SET search_path = \"#{current}\", #{default_tenant};"
-
+        logger.debug "current = #{current}"
+        logger.debug "current = #{default_tenant}"
         sql
-          .split("\n")
-          .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
-          .prepend(search_path)
-          .join("\n")
+        .split("\n")
+        .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
+        .prepend(search_path)
+        .join("\n")
       end
 
       #   Checks if any of regexps matches against input
