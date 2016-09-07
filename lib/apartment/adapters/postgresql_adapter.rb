@@ -163,10 +163,10 @@ module Apartment
       #   @return {String} patched raw SQL dump
       #
       def patch_search_path(sql)
-        logger.debug "sql = #{sql}"
+        Rails.logger.debug "sql = #{sql}"
         search_path = "SET search_path = \"#{current}\", #{default_tenant};"
-        logger.debug "current = #{current}"
-        logger.debug "current = #{default_tenant}"
+        Rails.logger.debug "current = #{current}"
+        Rails.logger.debug "current = #{default_tenant}"
         sql
         .split("\n")
         .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
