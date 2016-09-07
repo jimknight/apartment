@@ -131,7 +131,8 @@ module Apartment
         #   .join(' ')
 
         # `pg_dump -s -x -O -n #{default_tenant} #{excluded_tables} #{dbname}`
-
+        Rails.logger.debug "default_tenant = #{default_tenant}"
+        Rails.logger.debug "dbname = #{dbname}"
         with_pg_env { `pg_dump -s -x -O -n #{default_tenant} #{dbname}` }
       end
 
@@ -152,6 +153,10 @@ module Apartment
         ENV['PGPORT'] = @config[:port].to_s if @config[:port]
         ENV['PGUSER'] = @config[:username].to_s if @config[:username]
         ENV['PGPASSWORD'] = @config[:password].to_s if @config[:password]
+        Rails.logger.debug "ENV['PGHOST'] = #{ENV['PGHOST']}"
+        Rails.logger.debug "ENV['PGPORT'] = #{ENV['PGPORT']}"
+        Rails.logger.debug "ENV['PGUSER'] = #{ENV['PGUSER']}"
+        Rails.logger.debug "ENV['PGPASSWORD'] = #{ENV['PGPASSWORD']}"
 
         block.call
       ensure
@@ -166,7 +171,7 @@ module Apartment
         Rails.logger.debug "sql = #{sql}"
         search_path = "SET search_path = \"#{current}\", #{default_tenant};"
         Rails.logger.debug "current = #{current}"
-        Rails.logger.debug "current = #{default_tenant}"
+        Rails.logger.debug "default_tenant = #{default_tenant}"
         sql
         .split("\n")
         .select {|line| check_input_against_regexps(line, PSQL_DUMP_BLACKLISTED_STATEMENTS).empty?}
