@@ -133,9 +133,12 @@ module Apartment
         # `pg_dump -s -x -O -n #{default_tenant} #{excluded_tables} #{dbname}`
         Rails.logger.debug "default_tenant = #{default_tenant}"
         Rails.logger.debug "dbname = #{dbname}"
+        Rails.logger.debug "ENV['PGHOST'] = #{ENV['PGHOST']}"
+        Rails.logger.debug "ENV['PGPORT'] = #{ENV['PGPORT']}"
+        Rails.logger.debug "ENV['PGUSER'] = #{ENV['PGUSER']}"
+        Rails.logger.debug "ENV['PGPASSWORD'] = #{ENV['PGPASSWORD']}"
+        default_tenant = 'public' #test
         with_pg_env { `pg_dump -s -x -O -n #{default_tenant} #{dbname}` }
-      rescue => e
-        Rails.logger.fatal e.message
       end
 
       #   Dump data from schema_migrations table
